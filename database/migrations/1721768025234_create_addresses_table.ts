@@ -5,7 +5,7 @@ export default class AddressesSchema extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.increments('id').primary()
       table.string('uf').notNullable()
       table.string('city').notNullable()
       table.string('neighborhood').notNullable()
@@ -15,10 +15,12 @@ export default class AddressesSchema extends BaseSchema {
       table.string('zip_code').notNullable()
       table.string('country').notNullable()
       table.boolean('is_primary').defaultTo(false)
-      table.integer('customer_id').unsigned().references('id').inTable('customers')
-
-      table.timestamp('created_at').defaultTo(this.now())
-      table.timestamp('updated_at').defaultTo(this.now())
+      table
+        .integer('client_id')
+        .unsigned()
+        .references('clients.id')
+        .onDelete('CASCADE')
+        .notNullable()
     })
   }
 

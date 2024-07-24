@@ -10,7 +10,7 @@ export default class LoginController {
   async handle({ request, response }: HttpContext) {
     const data = await request.validateUsing(authenticateValidator)
 
-    const token = await this.authenticateServce.login(data)
+    const token = await this.authenticateServce.execute(data)
 
     return response.status(200).json({ token })
   }

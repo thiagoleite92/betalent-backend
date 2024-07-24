@@ -5,12 +5,14 @@ export default class PhonesSchema extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-      table.integer('customer_id').unsigned().references('id').inTable('customers')
-      table.string('number').notNullable()
-
-      table.timestamp('created_at').defaultTo(this.now())
-      table.timestamp('updated_at').defaultTo(this.now())
+      table.increments('id').primary()
+      table
+        .integer('client_id')
+        .unsigned()
+        .references('clients.id')
+        .notNullable()
+        .onDelete('CASCADE')
+      table.string('phone_number').notNullable()
     })
   }
 

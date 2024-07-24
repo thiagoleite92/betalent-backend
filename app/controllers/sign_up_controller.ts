@@ -10,7 +10,7 @@ export default class SignUpController {
   async handle({ request, response }: HttpContext) {
     const data = await request.validateUsing(createUserValidator)
 
-    const result = await this.createUserService.handle(data)
+    const result = await this.createUserService.execute(data)
 
     return response.status(201).send(result)
   }
