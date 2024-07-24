@@ -1,3 +1,5 @@
+import ResourceConflictException from '#exceptions/resource_conflict_exception'
+import ResourceNotFoundException from '#exceptions/resource_not_found_exception'
 import Product from '#models/product'
 import { CreateProductType } from '#validators/create_product'
 import { inject } from '@adonisjs/core'
@@ -6,6 +8,12 @@ import db from '@adonisjs/lucid/services/db'
 @inject()
 export default class ProductsService {
   async store({ description, name, price, stock }: CreateProductType) {
+    const findProduct = await this.findByName(name)
+
+    if (findProduct) {
+      throw new ResourceConflictException('Produto já cadastrado', 409)
+    }
+
     await Product.create({ description, name, price, stock })
   }
 
@@ -22,27 +30,42 @@ export default class ProductsService {
   async show(id: number) {
     const product = await this.findById(id)
 
+    if (!product) {
+      throw new ResourceNotFoundException('Produto não encontrado')
+    }
+
     return product
   }
 
   async findById(id: number) {
-    return Product.findOrFail(id)
+    return Product.findBy('id', id)
   }
 
   async update(id: number, { description, name, price, stock }: CreateProductType) {
-    const findProduct = await this.findById(id)
+    const product = await this.findById(id)
 
-    findProduct.description = description
-    findProduct.name = name
-    findProduct.price = price
-    findProduct.stock = stock
+    if (!product) {
+      throw new ResourceNotFoundException('Produto não encontrado')
+    }
 
-    await findProduct.save()
+    product.description = description
+    product.name = name
+    product.price = price
+    product.stock = stock
+    await product.save()
   }
 
   async softDelete(id: number) {
-    const findProduct = await this.findById(id)
+    const product = await this.findById(id)
 
-    await findProduct.delete()
+    if (!product) {
+      throw new ResourceNotFoundException('Produto não encontrado')
+    }
+
+    await product.delete()
+  }
+
+  async findByName(name: string) {
+    return Product.findBy('name', name)
   }
 }
