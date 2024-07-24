@@ -7,7 +7,7 @@ import hash from '@adonisjs/core/services/hash'
 export default class AuthenticateService {
   constructor(protected userModel: User) {}
 
-  async login({ email, password }: AuthenticateType) {
+  async execute({ email, password }: AuthenticateType) {
     const user = await User.verifyCredentials(email, password)
 
     if (await hash.verify(user.password, password)) {

@@ -19,4 +19,24 @@ export default class ClientsService {
       await this.client.related('phones').create({ phoneNumber })
     })
   }
+
+  async index() {
+    const clients = await Client.query().orderBy('id')
+
+    return clients
+  }
+
+  // async show(id: number) {
+  //   await this.findById(id)
+
+  //   const clients = await Client.query().where({ id }).has('sales')
+
+  //   console.log(clients)
+
+  //   return clients
+  // }
+
+  async findById(id: number) {
+    return Client.findOrFail(id)
+  }
 }

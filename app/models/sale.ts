@@ -10,12 +10,6 @@ export default class Sale extends BaseModel {
   declare id: number
 
   @column()
-  declare customerId: number
-
-  @column()
-  declare productId: number
-
-  @column()
   declare quantity: number
 
   @column()
@@ -24,21 +18,11 @@ export default class Sale extends BaseModel {
   @column()
   declare totalPrice: number
 
-  @column.dateTime({ autoCreate: true })
-  declare createdAt: DateTime
+  @belongsTo(() => Client)
+  @column()
+  declare clientId: BelongsTo<typeof Client>
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  declare updatedAt: DateTime
-
-  @belongsTo(() => Client, {
-    localKey: 'clientId',
-    foreignKey: 'id',
-  })
-  declare client: BelongsTo<typeof Client>
-
-  @belongsTo(() => Product, {
-    localKey: 'clientId',
-    foreignKey: 'id',
-  })
-  declare product: BelongsTo<typeof Product>
+  @belongsTo(() => Product)
+  @column()
+  declare productId: BelongsTo<typeof Product>
 }

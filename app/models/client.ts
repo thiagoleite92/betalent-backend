@@ -20,6 +20,6 @@ export default class Client extends BaseModel {
   @hasOne(() => Phone)
   declare phones: HasOne<typeof Phone>
 
-  // @hasMany(() => Sale)
-  // declare sales: HasMany<typeof Sale>
+  @hasMany(() => Sale)
+  declare sales: HasMany<typeof Sale>
 }

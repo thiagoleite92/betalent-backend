@@ -1,15 +1,34 @@
+import ClientsService from '#services/clients_service'
+import { createClientValidator } from '#validators/create_client'
+import { inject } from '@adonisjs/core'
 import type { HttpContext } from '@adonisjs/core/http'
 
+@inject()
 export default class ClientsController {
-  async index({}: HttpContext) {}
+  constructor(protected clientsService: ClientsService) {}
 
-  async store({ request }: HttpContext) {}
+  async index({ response }: HttpContext) {
+    return response.status(200).send(await this.clientsService.index())
+  }
 
-  async show({ params }: HttpContext) {}
+  async store({ request, response }: HttpContext) {
+    const body = await request.validateUsing(createClientValidator)
 
-  async edit({ params }: HttpContext) {}
+    await this.clientsService.store(body)
 
-  async update({ params, request }: HttpContext) {}
+    return response.status(201)
+  }
 
-  async destroy({ params }: HttpContext) {}
+  // async show({ params, response }: HttpContext) {
+  //   console.log(params)
+
+  //   const result = await this.clientsService.show(Number(params?.id))
+  //   return response.status(200).send(result)
+  // }
+
+  // async edit({ params }: HttpContext) {}
+
+  // async update({ params, request }: HttpContext) {}
+
+  // async destroy({ params }: HttpContext) {}
 }

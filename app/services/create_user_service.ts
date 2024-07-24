@@ -1,18 +1,12 @@
-import User from '#models/user'
+import { CreateUserType } from '#validators/create_user'
 import { inject } from '@adonisjs/core'
-
-interface SaveUserDTO {
-  email: string
-  password: string
-}
+import User from '#models/user'
 
 @inject()
 export default class CreateUserService {
   constructor(protected userModel: User) {}
 
-  async handle({ email, password }: SaveUserDTO) {
-    const user = await User.create({ email, password })
-
-    return User.accessTokens.create(user)
+  async execute({ email, password }: CreateUserType) {
+    await User.create({ email, password })
   }
 }
