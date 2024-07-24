@@ -22,13 +22,13 @@
 
 ## Produtos
 
-- [ ] Listar todos os produtos cadastrados (index)
-  - [ ] Apenas dados principais devem vir aqui
-  - [ ] Ordenar alfabeticamente
-- [ ] Detalhar um produto (show)
-- [ ] Criar um produto (store)
-- [ ] Editar um produto (update)
-- [ ] Exclusão lógica ("soft delete") de um produto (delete)
+- [x] Listar todos os produtos cadastrados (index)
+  - [x] Apenas dados principais devem vir aqui
+  - [x] Ordenar alfabeticamente
+- [x] Detalhar um produto (show)
+- [x] Criar um produto (store)
+- [x] Editar um produto (update)
+- [x] Exclusão lógica ("soft delete") de um produto (delete)
 
 ## Vendas
 

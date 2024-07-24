@@ -6,7 +6,12 @@ export default class SalesSchema extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id').primary()
-      table.integer('client_id').unsigned().references('clients.id').notNullable()
+      table
+        .integer('client_id')
+        .unsigned()
+        .references('clients.id')
+        .notNullable()
+        .onDelete('CASCADE')
       table.integer('product_id').unsigned().references('products.id').notNullable()
       table.integer('quantity').notNullable()
       table.decimal('unit_price', 12, 2).notNullable()
