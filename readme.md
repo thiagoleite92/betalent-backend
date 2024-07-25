@@ -17,7 +17,7 @@
   - [ ] Trazer as vendas mais recentes primeiro
   - [ ] Possibilidade de filtrar as vendas por mês + ano
 - [x] Adicionar um(a) cliente (store)
-- [ ] Editar um(a) cliente (update)
+- [x] Editar um(a) cliente (update)
 - [ ] Excluir um(a) cliente e vendas a ele(a) (delete)
 
 ## Produtos

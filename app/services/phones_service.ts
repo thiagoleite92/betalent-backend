@@ -4,6 +4,10 @@ import { inject } from '@adonisjs/core'
 @inject()
 export default class PhonesService {
   async findPhoneNumber(phoneNumber: string) {
-    return Phone.findBy('phoneNumber', phoneNumber)
+    return await Phone.findBy('phoneNumber', phoneNumber)
+  }
+
+  async findPhoneNumberByClientId(clientId: number) {
+    return Phone.findBy('clientId', clientId)
   }
 }

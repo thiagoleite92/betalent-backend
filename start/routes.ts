@@ -15,7 +15,7 @@ router
   .group(() => {
     router.post('/signup', [SignUpController])
     router.post('/login', [AuthenticateController])
-    router.resource('/client', ClientsController).except(['create'])
-    router.resource('/product', ProductsController).except(['create'])
+    router.resource('/client', ClientsController).except(['create', 'edit'])
+    router.resource('/product', ProductsController).except(['create', 'edit'])
   })
   .prefix('/api')

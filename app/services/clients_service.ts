@@ -4,13 +4,12 @@ import Client from '#models/client'
 import { CreateClientType } from '#validators/create_client'
 import ResourceConflictException from '#exceptions/resource_conflict_exception'
 import PhonesService from './phones_service.js'
+import ResourceNotFoundException from '#exceptions/resource_not_found_exception'
+import { UpdateClientType } from '#validators/update_client'
 
 @inject()
 export default class ClientsService {
-  constructor(
-    protected client: Client = new Client(),
-    protected phonesService: PhonesService
-  ) {}
+  constructor(protected phonesService: PhonesService) {}
 
   async store({ name, cpf, address, phoneNumber }: CreateClientType) {
     const findClient = await this.findByCPF(cpf)
@@ -25,22 +24,53 @@ export default class ClientsService {
       throw new ResourceConflictException('Número de telefone já cadastro na base de dados', 409)
     }
 
-    await db.transaction(async (trx) => {
-      this.client.name = name
-      this.client.cpf = cpf
+    const trx = await db.transaction()
 
-      this.client.useTransaction(trx)
-      await this.client.save()
+    try {
+      await db.transaction(async () => {
+        const client = new Client()
 
-      await this.client.related('phones').create({ phoneNumber })
-      await this.client.related('addresses').create({ ...address })
-    })
+        client.name = name
+        client.cpf = cpf
+
+        client.useTransaction(trx)
+        await client.save()
+
+        await client.related('phones').create({ phoneNumber })
+        await client.related('addresses').create({ ...address })
+
+        await trx.commit()
+      })
+    } catch (error) {
+      await trx.rollback()
+    }
   }
 
   async index() {
     const clients = await Client.query().orderBy('id')
 
     return clients
+  }
+
+  async update(id: number, { name, cpf }: UpdateClientType) {
+    const client = await this.findById(id)
+
+    if (!client) {
+      throw new ResourceNotFoundException('Cliente não encontrado')
+    }
+
+    if (cpf !== client?.cpf) {
+      const findByClientCPF = await this.findByCPF(cpf)
+
+      if (findByClientCPF) {
+        throw new ResourceConflictException('CPF já cadastrado na base de dados')
+      }
+    }
+
+    client.name = name
+    client.cpf = cpf
+
+    await client.save()
   }
 
   // async show(id: number) {
@@ -54,7 +84,7 @@ export default class ClientsService {
   // }
 
   async findById(id: number) {
-    return Client.findOrFail(id)
+    return Client.find(id)
   }
 
   async findByCPF(cpf: string) {
