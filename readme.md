@@ -18,7 +18,7 @@
   - [ ] Possibilidade de filtrar as vendas por mês + ano
 - [x] Adicionar um(a) cliente (store)
 - [x] Editar um(a) cliente (update)
-- [ ] Excluir um(a) cliente e vendas a ele(a) (delete)
+- [x] Excluir um(a) cliente e vendas a ele(a) (delete)
 
 ## Produtos
 
@@ -32,4 +32,4 @@
 
 ## Vendas
 
-- [ ] Registrar venda de 1 produto a 1 cliente (store)
+- [x] Registrar venda de 1 produto a 1 cliente (store)

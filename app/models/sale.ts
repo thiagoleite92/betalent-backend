@@ -1,7 +1,6 @@
 // app/Models/Sale.ts
 import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
-import { DateTime } from 'luxon'
 import Client from './client.js'
 import Product from './product.js'
 

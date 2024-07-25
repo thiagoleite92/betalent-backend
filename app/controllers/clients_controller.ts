@@ -35,5 +35,9 @@ export default class ClientsController {
     return response.status(202).send(product)
   }
 
-  // async destroy({ params }: HttpContext) {}
+  async destroy({ params, response }: HttpContext) {
+    await this.clientsService.delete(params.id)
+
+    response.noContent()
+  }
 }

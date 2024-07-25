@@ -1,7 +1,9 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@adonisjs/lucid/orm'
+import { BaseModel, column, hasMany } from '@adonisjs/lucid/orm'
 import { compose } from '@adonisjs/core/helpers'
 import { SoftDeletes } from 'adonis-lucid-soft-deletes'
+import Sale from './sale.js'
+import type { HasMany } from '@adonisjs/lucid/types/relations'
 
 export default class Product extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
@@ -27,4 +29,7 @@ export default class Product extends compose(BaseModel, SoftDeletes) {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime
+
+  @hasMany(() => Sale)
+  declare sales: HasMany<typeof Sale>
 }

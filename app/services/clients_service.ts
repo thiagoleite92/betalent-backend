@@ -90,4 +90,14 @@ export default class ClientsService {
   async findByCPF(cpf: string) {
     return Client.findBy('cpf', cpf)
   }
+
+  async delete(id: number) {
+    const client = await this.findById(id)
+
+    if (!client) {
+      throw new ResourceNotFoundException('Produto não encontrado')
+    }
+
+    await client.delete()
+  }
 }

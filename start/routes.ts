@@ -1,3 +1,4 @@
+const SalesController = () => import('#controllers/sales_controller')
 import router from '@adonisjs/core/services/router'
 
 const SignUpController = () => import('#controllers/sign_up_controller')
@@ -13,9 +14,13 @@ router.get('/', async () => {
 
 router
   .group(() => {
+    router.group(() => {
+      router.resource('/client', ClientsController).except(['create', 'edit'])
+      router.resource('/product', ProductsController).except(['create', 'edit'])
+      router.post('/sale', [SalesController])
+    })
+
     router.post('/signup', [SignUpController])
     router.post('/login', [AuthenticateController])
-    router.resource('/client', ClientsController).except(['create', 'edit'])
-    router.resource('/product', ProductsController).except(['create', 'edit'])
   })
   .prefix('/api')
