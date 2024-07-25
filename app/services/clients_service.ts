@@ -73,15 +73,26 @@ export default class ClientsService {
     await client.save()
   }
 
-  // async show(id: number) {
-  //   await this.findById(id)
+  async show(id: number, queryDate?: string) {
+    const client = await this.findById(id)
 
-  //   const clients = await Client.query().where({ id }).has('sales')
+    if (!client) {
+      throw new ResourceNotFoundException('Cliente não encontrado')
+    }
 
-  //   console.log(clients)
+    await client?.load('sales', (saleQuery) => {
+      if (queryDate) {
+        saleQuery.where('created_at', '>=', queryDate).orderBy('created_at', 'desc')
+        return
+      }
 
-  //   return clients
-  // }
+      saleQuery.orderBy('created_at', 'desc')
+
+      return
+    })
+
+    return client
+  }
 
   async findById(id: number) {
     return Client.find(id)

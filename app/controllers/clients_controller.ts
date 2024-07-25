@@ -20,12 +20,18 @@ export default class ClientsController {
     return response.status(201)
   }
 
-  // async show({ params, response }: HttpContext) {
-  //   console.log(params)
+  async show({ params, response, request }: HttpContext) {
+    const { date } = request?.qs()
 
-  //   const result = await this.clientsService.show(Number(params?.id))
-  //   return response.status(200).send(result)
-  // }
+    let queryDate
+
+    if (date) {
+      queryDate = new Date(date).toISOString()
+    }
+
+    const result = await this.clientsService.show(Number(params?.id), queryDate)
+    return response.status(200).send(result)
+  }
 
   async update({ params, request, response }: HttpContext) {
     const body = await request.validateUsing(updateClientValidator)

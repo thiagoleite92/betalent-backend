@@ -15,12 +15,13 @@ router.get('/', async () => {
 router
   .group(() => {
     router.group(() => {
-      router.resource('/client', ClientsController).except(['create', 'edit'])
-      router.resource('/product', ProductsController).except(['create', 'edit'])
-      router.post('/sale', [SalesController])
+      router.resource('client', ClientsController).apiOnly().except(['show'])
+      router.get('client/:id', [ClientsController, 'show'])
+      router.resource('product', ProductsController).apiOnly()
+      router.post('sale', [SalesController])
     })
 
-    router.post('/signup', [SignUpController])
-    router.post('/login', [AuthenticateController])
+    router.post('signup', [SignUpController])
+    router.post('login', [AuthenticateController])
   })
-  .prefix('/api')
+  .prefix('api')

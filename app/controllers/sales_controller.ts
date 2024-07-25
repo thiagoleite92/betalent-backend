@@ -10,8 +10,6 @@ export default class SalesController {
   async handle({ request }: HttpContext) {
     const body = await request.validateUsing(saleValidator)
 
-    console.log(body)
-
     await this.salesService.execute(body)
   }
 }

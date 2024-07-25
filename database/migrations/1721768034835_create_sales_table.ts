@@ -21,6 +21,9 @@ export default class SalesSchema extends BaseSchema {
       table.integer('quantity').notNullable()
       table.decimal('unit_price', 12, 2).notNullable()
       table.decimal('total_price', 12, 2).notNullable()
+
+      table.timestamp('created_at').defaultTo(this.now())
+      table.timestamp('updated_at').defaultTo(this.now())
     })
   }
 

@@ -13,9 +13,9 @@
 - [x] Listar todos os clientes cadastrados (index)
   - [x] Apenas dados principais devem vir aqui
   - [x] Ordenar pelo ID
-- [ ] Detalhar um(a) cliente e vendas a ele(a) (show)
-  - [ ] Trazer as vendas mais recentes primeiro
-  - [ ] Possibilidade de filtrar as vendas por mês + ano
+- [x] Detalhar um(a) cliente e vendas a ele(a) (show)
+  - [x] Trazer as vendas mais recentes primeiro
+  - [x] Possibilidade de filtrar as vendas por mês + ano
 - [x] Adicionar um(a) cliente (store)
 - [x] Editar um(a) cliente (update)
 - [x] Excluir um(a) cliente e vendas a ele(a) (delete)
