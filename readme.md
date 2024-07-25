@@ -33,3 +33,7 @@
 ## Vendas
 
 - [x] Registrar venda de 1 produto a 1 cliente (store)
+
+## Rotas Privdas
+
+- [x] As rotas de Produtos, Clientes e Vendas devem só podem ser acessadas por usuários autenticados.
