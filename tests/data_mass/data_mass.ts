@@ -19,3 +19,36 @@ export const INVALID_PASSWORD = [
     field: 'password',
   },
 ]
+
+export const VALID_CLIENT_DATA_POST = [
+  {
+    name: 'Thiago Leite',
+    cpf: '123.456.789-05',
+    address: {
+      uf: 'PE',
+      city: 'Recife',
+      neighborhood: 'Jardim Paulista',
+      street: 'Rua dos Bobos',
+      number: '123',
+      complement: 'Apto 45',
+      zip_code: '50711-181',
+      country: 'Brasil',
+      is_primary: true,
+    },
+    phoneNumber: '81999999998',
+  },
+]
+
+export const VALID_CLIENT_DATA_PUT = [
+  {
+    name: 'Thiago Leite',
+    cpf: '123.456.789-05',
+  },
+]
+
+export const VALID_CLIENT_DATA_CPF_TAKEN = [
+  {
+    name: 'Thiago Leite',
+    cpf: '123.456.789-02',
+  },
+]
