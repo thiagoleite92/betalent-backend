@@ -1,4 +1,5 @@
 import { assert } from '@japa/assert'
+import { expect } from '@japa/expect'
 import { apiClient } from '@japa/api-client'
 import app from '@adonisjs/core/services/app'
 import type { Config } from '@japa/runner/types'
@@ -16,6 +17,7 @@ import env from '#start/env'
  */
 export const plugins: Config['plugins'] = [
   assert(),
+  expect(),
   apiClient({ baseURL: `http://${env.get('HOST')}:${env.get('PORT')}` }),
   pluginAdonisJS(app),
 ]
