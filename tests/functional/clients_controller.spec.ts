@@ -1,11 +1,14 @@
 import Client from '#models/client'
+import Product from '#models/product'
+import Sale from '#models/sale'
 import {
-  VALID_CLIENT_DATA_POST,
+  VALID_CLIENT_DATA,
   VALID_CLIENT_DATA_PUT,
   VALID_CLIENT_DATA_CPF_TAKEN,
 } from '#tests/data_mass/data_mass'
 import { createAndAuthenticateUser } from '#tests/utils/create_and_authenticate_user'
 import { createClient } from '#tests/utils/create_client'
+import { createProduct } from '#tests/utils/create_product'
 import { isSortedByProperty } from '#tests/utils/verify_order_array_by_propertie'
 import db from '@adonisjs/lucid/services/db'
 import { test } from '@japa/runner'
@@ -16,15 +19,17 @@ test.group('e2e.client', (group) => {
   group.each.setup(async () => {
     await db.from('users').delete()
     await db.from('clients').delete()
+    await db.from('products').delete()
   })
 
   group.each.teardown(async () => {
     await db.from('users').delete()
     await db.from('clients').delete()
+    await db.from('products').delete()
   })
 
   test('[POST] should create a client, and return with status 201')
-    .with(VALID_CLIENT_DATA_POST)
+    .with(VALID_CLIENT_DATA)
     .run(async ({ client, assert }, data) => {
       const token = await createAndAuthenticateUser(client)
 
@@ -41,7 +46,7 @@ test.group('e2e.client', (group) => {
     })
 
   test('[POST] a non-authenticated user shouldnt create a client, and return with status 401')
-    .with([VALID_CLIENT_DATA_POST])
+    .with([VALID_CLIENT_DATA])
     .run(async ({ client, assert }, data) => {
       const response = await client
         .post(endpoint)
@@ -105,7 +110,7 @@ test.group('e2e.client', (group) => {
     })
 
   test('[POST] shouldnt create a client with phone already taken, and return with status 409')
-    .with(VALID_CLIENT_DATA_POST)
+    .with(VALID_CLIENT_DATA)
     .run(async ({ client, assert }, data) => {
       const { token } = await createClient(client, {
         name: 'Thiago Leite',
@@ -289,7 +294,7 @@ test.group('e2e.client', (group) => {
   })
 
   test('[DELETE] should delete a client by id, and return with status 201')
-    .with(VALID_CLIENT_DATA_POST)
+    .with(VALID_CLIENT_DATA)
     .run(async ({ client, assert }, data) => {
       const { token, id } = await createClient(client, data)
 
@@ -304,4 +309,58 @@ test.group('e2e.client', (group) => {
 
       assert.equal(clients?.length, 0)
     })
+
+  test('[DELETE] should delete a sale if the client related is deleted').run(
+    async ({ client, assert }) => {
+      const { token, id } = await createProduct(client, {
+        name: 'Telefone',
+        description: 'Ótimo aparelho',
+        price: 50.99,
+        stock: 50,
+      })
+
+      await client
+        .post('/api/client')
+        .json({
+          name: 'Thiago Leite',
+          cpf: '123.456.789-05',
+          address: {
+            uf: 'PE',
+            city: 'Recife',
+            neighborhood: 'Jardim Paulista',
+            street: 'Rua dos Bobos',
+            number: '123',
+            complement: 'Apto 45',
+            zip_code: '50711-181',
+            country: 'Brasil',
+            is_primary: true,
+          },
+          phoneNumber: '81999999998',
+        })
+        .header('Authorization', 'Bearer ' + token)
+
+      const findClient = await Client.all()
+
+      const response = await client
+        .post('/api/sale')
+        .json({ clientId: findClient[0].id, productId: id, quantity: 50 })
+        .header('Authorization', 'Bearer ' + token)
+
+      const sales = await Sale.all()
+      const products = await Product.all()
+
+      response.assertStatus(200)
+      assert.equal(sales?.length, 1)
+      assert.equal(products[0]?.stock, 0)
+
+      const deleteClientResponse = await client
+        .delete(`/api/client/${findClient[0].id}`)
+        .header('Authorization', 'Bearer ' + token)
+
+      const salesAfterDeleteClient = await Sale.all()
+
+      deleteClientResponse.assertStatus(204)
+      assert.equal(salesAfterDeleteClient?.length, 0)
+    }
+  )
 })
