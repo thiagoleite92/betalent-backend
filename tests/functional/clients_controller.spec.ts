@@ -21,7 +21,7 @@ const FILTER_DATES = [
   { date: '2024/07', arrayLength: 1 },
 ]
 
-test.group('e2e.client', (group) => {
+test.group('e2e.clients', (group) => {
   group.each.setup(async () => {
     await db.from('users').delete()
     await db.from('clients').delete()
