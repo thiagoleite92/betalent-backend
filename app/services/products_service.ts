@@ -48,6 +48,12 @@ export default class ProductsService {
       throw new ResourceNotFoundException('Produto não encontrado')
     }
 
+    const findProduct = await this.findByName(name)
+
+    if (findProduct?.id !== id) {
+      throw new ResourceConflictException('Produto já cadastrado', 409)
+    }
+
     product.description = description
     product.name = name
     product.price = price
