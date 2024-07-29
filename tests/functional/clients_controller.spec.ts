@@ -15,6 +15,12 @@ import { test } from '@japa/runner'
 
 const endpoint = '/api/client'
 
+const FILTER_DATES = [
+  { date: '2023/06', arrayLength: 3 },
+  { date: '2023/07', arrayLength: 2 },
+  { date: '2024/07', arrayLength: 1 },
+]
+
 test.group('e2e.client', (group) => {
   group.each.setup(async () => {
     await db.from('users').delete()
@@ -363,4 +369,88 @@ test.group('e2e.client', (group) => {
       assert.equal(salesAfterDeleteClient?.length, 0)
     }
   )
+
+  test('[GET] should get a client details with sales filtered by date')
+    .with(FILTER_DATES)
+    .run(async ({ client, assert }, { date, arrayLength }) => {
+      const { token, id } = await createProduct(client, {
+        name: 'Telefone',
+        description: 'Ótimo aparelho',
+        price: 50.99,
+        stock: 50,
+      })
+
+      await client
+        .post('/api/client')
+        .json({
+          name: 'Thiago Leite',
+          cpf: '123.456.789-05',
+          address: {
+            uf: 'PE',
+            city: 'Recife',
+            neighborhood: 'Jardim Paulista',
+            street: 'Rua dos Bobos',
+            number: '123',
+            complement: 'Apto 45',
+            zip_code: '50711-181',
+            country: 'Brasil',
+            is_primary: true,
+          },
+          phoneNumber: '81999999998',
+        })
+        .header('Authorization', 'Bearer ' + token)
+
+      const findClient = await Client.all()
+
+      await db.table('sales').multiInsert([
+        {
+          client_id: findClient[0]?.id,
+          product_id: id,
+          quantity: 2,
+          unit_price: '2999.99',
+          total_price: '5999.98',
+          created_at: '2024-07-25T20:08:36.000+00:00',
+          updated_at: '2024-07-25T20:08:36.000+00:00',
+        },
+        {
+          client_id: findClient[0]?.id,
+          product_id: id,
+          quantity: 10,
+          unit_price: '2999.99',
+          total_price: '29999.90',
+          created_at: '2023-07-24T20:17:59.000+00:00',
+          updated_at: '2024-07-25T20:17:59.000+00:00',
+        },
+        {
+          client_id: findClient[0]?.id,
+          product_id: id,
+          quantity: 2,
+          unit_price: '2999.99',
+          total_price: '5999.98',
+          created_at: '2023-06-23T20:09:56.000+00:00',
+          updated_at: '2023-07-25T20:09:56.000+00:00',
+        },
+      ])
+
+      const response = await client
+        .get(`${endpoint}/${findClient[0]?.id}?date=${date}`)
+        .header('Authorization', 'Bearer ' + token)
+
+      const sales = response?.body().sales
+
+      response.assertStatus(200)
+
+      assert.equal(sales.length, arrayLength)
+
+      assert.properties(sales[0], [
+        'id',
+        'clientId',
+        'productId',
+        'quantity',
+        'unitPrice',
+        'totalPrice',
+        'createdAt',
+        'updatedAt',
+      ])
+    })
 })
