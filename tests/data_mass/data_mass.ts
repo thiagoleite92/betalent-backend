@@ -20,7 +20,7 @@ export const INVALID_PASSWORD = [
   },
 ]
 
-export const VALID_CLIENT_DATA_POST = [
+export const VALID_CLIENT_DATA = [
   {
     name: 'Thiago Leite',
     cpf: '123.456.789-05',
@@ -50,5 +50,14 @@ export const VALID_CLIENT_DATA_CPF_TAKEN = [
   {
     name: 'Thiago Leite',
     cpf: '123.456.789-02',
+  },
+]
+
+export const VALID_PRODUCT_DATA = [
+  {
+    name: 'mamao',
+    description: 'Fruta que ajuda na evacuação intestinal',
+    price: 50.99,
+    stock: 50,
   },
 ]

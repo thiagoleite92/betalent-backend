@@ -1,4 +1,5 @@
 import Product from '#models/product'
+import { VALID_PRODUCT_DATA } from '#tests/data_mass/data_mass'
 import { createAndAuthenticateUser } from '#tests/utils/create_and_authenticate_user'
 import { createProduct } from '#tests/utils/create_product'
 import { isSortedByProperty } from '#tests/utils/verify_order_array_by_propertie'
@@ -6,15 +7,6 @@ import db from '@adonisjs/lucid/services/db'
 import { test } from '@japa/runner'
 
 const endpoint = '/api/product'
-
-const VALID_PRODUCT_DATA = [
-  {
-    name: 'mamao',
-    description: 'Fruta que ajuda na evacuação intestinal',
-    price: 2999.99,
-    stock: 50,
-  },
-]
 
 test.group('e2e.products', (group) => {
   group.each.setup(async () => {
